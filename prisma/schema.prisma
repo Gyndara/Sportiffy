@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id_user          Int                @id @unique @default(autoincrement())
+  username         String             @unique
+  email            String
+  notelp           String
+  password         String
+  kategori_user    role               @default(USER)
+  isApproved       Boolean  
+  booking          booking_lapangan[]
+}
+
+model venue_lapangan {
+  idVenue          Int              @id @unique @default(autoincrement())
+  venueCategory    String
+  administrator    String
+  venueName        String
+  address          String
+  linkAddress      String
+  facility         String
+  priceRange       String
+  openingSchedule  String
+  image            String
+  accountNumber    Int
+  field            field_lapangan[]
+}
+
+model field_lapangan {
+  idField          Int                @id @unique @default(autoincrement())
+  idVenue          Int
+  fieldName        String
+  roomCategory     String
+  fieldType        String
+  fieldDescription String
+  rentalHours      String
+  rentalPrice      String
+  no_transaksi     booking_lapangan[]
+  venue            venue_lapangan     @relation(fields: [idVenue], references: [idVenue], onDelete: Cascade )
+}
+
+model booking_lapangan {
+  transaction      Int            @id @unique @default(autoincrement())
+  id_user          Int
+  dateTime         DateTime
+  idField          Int
+  nama_pengirim    pembayaran[]
+  field            field_lapangan @relation(fields: [idField], references: [idField], onDelete:  Cascade)
+  user             users          @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
+} 
+ 
+model pembayaran { 
+  idPayment        Int                @id @unique @default(autoincrement())
+  transaction      Int
+  paymentMethod    metode             @default(Tunai)
+  customer         String
+  evidence         String
+  track            tracking_booking[]
+  booking          booking_lapangan   @relation(fields: [transaction], references: [transaction], onDelete: Cascade)
+}
+
+model tracking_booking {
+  idTracking       Int        @id @default(autoincrement())
+  idPayment        Int
+  paymentProgress  status     @default(NOT_PAID)
+  idHistory        history[]
+  bayar            pembayaran @relation(fields: [idPayment], references: [idPayment], onDelete: Cascade)
+} 
+ 
+model history { 
+  idHistory        Int              @id @unique @default(autoincrement())
+  idTracking       Int
+  track            tracking_booking @relation(fields: [idTracking], references: [idTracking], onDelete: Cascade)
+}
+
+enum role {
+  USER
+  PARTNER
+  ADMIN
+}
+
+enum status {
+  PAID
+  NOT_PAID
+}
+
+enum metode {
+  Transfer
+  Tunai
+}

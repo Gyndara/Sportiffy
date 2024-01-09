@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+    <form id="form_el" class='new-project' action='/projects' method='POST' enctype="multipart/form-data">
+        <label for='file'>Pilih gambar Anda:</label>
+        <input type='file' multiple='multiple' accept='image/*' name='uploadedImages' id='file' />
+        <span class='hint'>Format yang didukung: jpg, jpeg, png.</span>
+        <button type='submit'>Upload</button>
+    </form>
+</body>
+</html>
