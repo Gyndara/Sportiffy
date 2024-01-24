@@ -1,2 +1,2 @@
 # Sportiffy
-Web pembokingan lapangan olahraga
+aplikasi pembokingan tempat olahraga
