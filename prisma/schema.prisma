@@ -13,9 +13,38 @@ model users {
   email            String
   notelp           String
   password         String
-  kategori_user    role               @default(USER)
-  isApproved       Boolean  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt  
   booking          booking_lapangan[]
+  user_roles       user_roles[]
+  partner          partner[]
+}
+
+model user_roles {
+  id Int @id @unique @default(autoincrement())
+  user_id Int
+  role_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user users @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
+  role roles @relation(fields: [role_id], references: [id], onDelete: Cascade)
+}
+
+model roles {
+  id Int @id @unique @default(autoincrement())
+  roles String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user_roles user_roles[]
+}
+
+model partner {
+  id Int @id @unique @default(autoincrement())
+  user_id Int
+  approval Boolean
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user users @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
 }
 
 model venue_lapangan {
@@ -78,12 +107,6 @@ model history {
   idHistory        Int              @id @unique @default(autoincrement())
   idTracking       Int
   track            tracking_booking @relation(fields: [idTracking], references: [idTracking], onDelete: Cascade)
-}
-
-enum role {
-  USER
-  PARTNER
-  ADMIN
 }
 
 enum status {
